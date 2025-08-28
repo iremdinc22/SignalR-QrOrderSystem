@@ -1,0 +1,54 @@
+# Build outputs
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider / VS / VSCode
+.idea/
+.vs/
+.vscode/
+
+# Resharper / Rider
+_ReSharper*/
+*.DotSettings.user
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Backup & temp
+*.bak
+*.swp
+*.tmp
+*.temp
+
+# macOS / Linux
+.DS_Store
+Thumbs.db
+
+# Publish outputs
+wwwroot/dist/
+wwwroot/uploads/
+
+# Configuration secrets
+appsettings.Development.json
+appsettings.*.json
+
+# Logs
+*.log
+
+# Entity Framework Core migrations bundle
+migrations/
+
+# Others
+*.db

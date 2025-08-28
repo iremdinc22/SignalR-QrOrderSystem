@@ -1,0 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using SignalR.EntityLayer.Entities;
+
+namespace SignalR.DataAccessLayer.Concrete;
+
+public class SignalRContext : DbContext
+{
+    public SignalRContext(DbContextOptions<SignalRContext> options) : base(options)
+    {
+    }
+    
+    // Örnek tablolar (DbSet)
+    public DbSet<About> Abouts { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
+    public DbSet<Discount> Discounts { get; set; }
+    public DbSet<Feature> Features { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<SocialMedia> SocialMedias { get; set; }
+    public DbSet<Testimonial> Testimonials { get; set; }
+    
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            // PostgreSQL bağlantısı
+            optionsBuilder.UseNpgsql("Host=localhost;Database=SignalRDb;Username=postgres;Password=123");
+        }
+    }
+}
