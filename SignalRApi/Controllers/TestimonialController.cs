@@ -44,6 +44,7 @@ namespace SignalRApi.Controllers
         public IActionResult DeleteTestimonial(int id)
         {
             var value  = _testimonialService.TGetById(id);
+            _testimonialService.TDelete(value);
             return Ok("Müşteri Yorum Bilgisi Silindi");
         }
         

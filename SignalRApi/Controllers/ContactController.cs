@@ -44,6 +44,7 @@ namespace SignalRApi.Controllers
         public IActionResult DeleteContact(int id)
         {
             var value  = _contactService.TGetById(id);
+            _contactService.TDelete(value);
             return Ok("İletişim Bilgisi Silindi");
         }
         

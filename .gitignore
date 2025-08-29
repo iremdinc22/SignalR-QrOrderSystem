@@ -36,19 +36,21 @@ packages/
 .DS_Store
 Thumbs.db
 
-# Publish outputs
+# Publish outputs (frontend build veya upload klasörleri)
 wwwroot/dist/
 wwwroot/uploads/
 
 # Configuration secrets
 appsettings.Development.json
+appsettings.Local.json
 appsettings.*.json
 
 # Logs
 *.log
+logs/
 
-# Entity Framework Core migrations bundle
-migrations/
+# EF Core migration bundle (migration klasörü değil, sadece bundle dosyaları!)
+*efbundle*
 
-# Others
-*.db
+# Node.js (eğer frontend varsa)
+node_modules/

@@ -45,6 +45,7 @@ namespace SignalRApi.Controllers
         public IActionResult DeleteFeature(int id)
         {
             var value  = _featureService.TGetById(id);
+            _featureService.TDelete(value);
             return Ok("Özellik Silindi");
         }
         

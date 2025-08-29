@@ -43,6 +43,7 @@ namespace SignalRApi.Controllers
         public IActionResult DeleteDiscount(int id)
         {
             var value  = _discountService.TGetById(id);
+            _discountService.TDelete(value);
             return Ok("İndirim Kuponu Silindi");
         }
         
