@@ -12,7 +12,7 @@ public class SignalRContext : DbContext
     public SignalRContext(DbContextOptions<SignalRContext> options) : base(options)
     {
     }
-    
+
     // Örnek tablolar (DbSet)
     public DbSet<About> Abouts { get; set; }
     public DbSet<Booking> Bookings { get; set; }
@@ -26,15 +26,27 @@ public class SignalRContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderDetail> OrderDetails { get; set; }
     public DbSet<MoneyCase> MoneyCases { get; set; }
+    public DbSet<MenuTable> MenuTables { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+    {
+        base.OnModelCreating(modelBuilder);
 
-            // tablo adlarını açıkça eşle
-            modelBuilder.Entity<Order>().ToTable("Orders");
-            modelBuilder.Entity<OrderDetail>().ToTable("OrderDetails");
+        // tablo adlarını açıkça eşle
+        modelBuilder.Entity<Order>().ToTable("Orders");
+        modelBuilder.Entity<OrderDetail>().ToTable("OrderDetails");
+    }
+        
+        // Sadece migration sırasında lazım olursa:
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            // Design-time için fallback (zorunlu değil)
+            optionsBuilder.UseNpgsql("Host=localhost;Database=SignalRDb;Username=postgres;Password=123");
         }
+    }
+
     
 
 }
