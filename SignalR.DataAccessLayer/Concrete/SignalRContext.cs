@@ -5,6 +5,10 @@ namespace SignalR.DataAccessLayer.Concrete;
 
 public class SignalRContext : DbContext
 {
+    public SignalRContext()
+    {
+    }
+
     public SignalRContext(DbContextOptions<SignalRContext> options) : base(options)
     {
     }
@@ -19,14 +23,18 @@ public class SignalRContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<SocialMedia> SocialMedias { get; set; }
     public DbSet<Testimonial> Testimonials { get; set; }
-    
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<MoneyCase> MoneyCases { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // PostgreSQL bağlantısı
-            optionsBuilder.UseNpgsql("Host=localhost;Database=SignalRDb;Username=postgres;Password=123");
+            base.OnModelCreating(modelBuilder);
+
+            // tablo adlarını açıkça eşle
+            modelBuilder.Entity<Order>().ToTable("Orders");
+            modelBuilder.Entity<OrderDetail>().ToTable("OrderDetails");
         }
-    }
+    
+
 }

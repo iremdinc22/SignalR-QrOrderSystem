@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Index2";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<h1>Index</h1>
+
+<!-- Kütüphaneler -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<!-- SignalR kütüphanesi -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.2/signalr.min.js"></script>
+
+<!-- SignalR bağlantı kodu -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <script type="text/javascript">
+                        $(document).ready(() => {
+                            var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5247/signalrhub").build();
+                            $("#connstatus").text(connection.state);
+                           
+                            connection.start().then(() => {
+                                $("#connstatus").text(connection.state);
+                                
+                                // Bu method her saniyede yenilemeden tetikleme sağlar.
+                                setInterval(() => {
+                                    connection.invoke("SendCategoryCount");
+                                }, 1000);
+                                 
+                            }).catch((err) => { console.log(err) });
+
+                            
+                            connection.on("ReceiveCategoryCount", (value) => {
+                                $("#categorycount").text(value);
+                                
+                            })
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="alert alert-success">Bağlantının Durumu: <strong id="connstatus"></strong></div>
+        <div class="alert alert-info">Kategori Sayısı: <strong id="categorycount"></strong></div>
+    </div>
+</div>
+
+
+
