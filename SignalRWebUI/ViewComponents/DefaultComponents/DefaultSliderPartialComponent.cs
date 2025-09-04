@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.SliderDtos;
 
-namespace ViewComponents.LayoutComponents
+namespace ViewComponents.DefaultComponents
 {
     public class DefaultSliderPartialViewComponent : ViewComponent
     {

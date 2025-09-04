@@ -2,23 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.AboutDtos;
 
-namespace ViewComponents.DefaultComponents
+namespace SignalRWebUI.Controllers
 {
-    public class DefaultAboutPartialViewComponent : ViewComponent
+    public class AboutUIController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
-
-        public DefaultAboutPartialViewComponent(IHttpClientFactory httpClientFactory)
+        public AboutUIController(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
-
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IActionResult> Index()
         {
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("http://localhost:5247/api/About");
 
-            List<ResultAboutDto> values = new List<ResultAboutDto>();
+            List<ResultAboutDto> values = null;
 
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -30,5 +28,4 @@ namespace ViewComponents.DefaultComponents
         }
 
     }
-
- }
+}

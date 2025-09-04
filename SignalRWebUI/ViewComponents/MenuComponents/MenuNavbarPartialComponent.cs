@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ViewComponents.DefaultComponents
+namespace ViewComponents.MenuComponents
 {
-    public class DefaultBookATablePartialViewComponent : ViewComponent
+    public class MenuNavbarPartialViewComponent : ViewComponent
     {
         public IViewComponentResult Invoke()
         {
             return View();
         }
     }
+    
 }
+

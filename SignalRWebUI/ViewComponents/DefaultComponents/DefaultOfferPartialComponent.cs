@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.DiscountDtos;
 
-namespace ViewComponents.LayoutComponents
+namespace ViewComponents.DefaultComponents
 {
     public class DefaultOfferPartialViewComponent : ViewComponent
     {

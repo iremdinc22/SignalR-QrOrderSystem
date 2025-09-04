@@ -1,19 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.ProductDtos;
-
-namespace ViewComponents.DefaultComponents
+namespace SignalRWebUI.Controllers
 {
-    public class DefaultOurMenuPartialViewComponent : ViewComponent
+    public class MenuController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public DefaultOurMenuPartialViewComponent(IHttpClientFactory httpClientFactory)
+        public MenuController(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IActionResult> Index()
         {
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("http://localhost:5247/api/Product");
@@ -28,6 +27,13 @@ namespace ViewComponents.DefaultComponents
 
             return View(values);
         }
+
+        [HttpPost] // ← bu yeterli olabilir
+        public IActionResult Select(int id)
+        {
+            return Ok(new { productId = id });
+        }
     }
 
-  }
+
+}
