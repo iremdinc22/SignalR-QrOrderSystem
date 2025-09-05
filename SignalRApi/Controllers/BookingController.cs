@@ -33,7 +33,7 @@ namespace SignalRApi.Controllers
                 Phone = createBookingDto.Phone,
                 Mail = createBookingDto.Mail,
                 PersonCount = createBookingDto.PersonCount,
-                Date = createBookingDto.Date,
+                Date = DateTime.SpecifyKind(createBookingDto.Date, DateTimeKind.Utc)
                 
             };
             _bookingService.TAdd(booking);
@@ -58,7 +58,7 @@ namespace SignalRApi.Controllers
                 Phone = updateBookingDto.Phone,
                 Mail = updateBookingDto.Mail,
                 PersonCount = updateBookingDto.PersonCount,
-                Date = updateBookingDto.Date,
+                Date = DateTime.SpecifyKind(updateBookingDto.Date, DateTimeKind.Utc)
                 
             };
             _bookingService.TUpdate(booking);
