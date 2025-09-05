@@ -104,25 +104,25 @@
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
   <script>
-    function showProductId(id, e) {
-      if (e) e.preventDefault(); // link yönlenmesin
+  function showProductId(value) {
+    var id = value;
 
-      $.ajax({
-        url: '/Menu/Select',
-        type: 'POST',
-        data: { id: id },
-        success: function () {
-          swal("Seçilen Ürün ID", id.toString(), "success");
-        },
-        error: function (xhr) {
-          console.error(xhr.responseText);
-          swal("Hata", "İstek başarısız oldu!", "error");
-        }
-      });
+    $.ajax({
+      type: 'POST',
+      url: '/Menu/AddBasket/' + id,
+      data: { id: id },
+      success: function () {
+        swal("Seçilen Ürün ID: " + id, "Seçtiğiniz Ürün Sepete Eklendi!", "success");
+      },
+      error: function () {
+        swal("Hata", "Ürün sepete eklenemedi!", "error");
+      }
+    });
 
-      return false;
-    }
-  </script>
+    return false;
+  }
+</script>
+
 
 </body>
 </html>

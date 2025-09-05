@@ -1,0 +1,278 @@
+@using System.Globalization
+@model List<ResultBasketDto>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+@await Component.InvokeAsync("UILayoutHeadPartial")
+
+<body class="sub_page">
+    @await Component.InvokeAsync("MenuNavbarPartial")
+
+    <div class="container-fluid mt-4">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-dark mb-30">
+                    <a class="breadcrumb-item text-white" href="/Default/Index">Ana Sayfa</a>
+                    <a class="breadcrumb-item text-white" href="/Menu/Index">Menü</a>
+                    <span class="breadcrumb-item active text-white">Sepetiniz</span>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row px-xl-5 g-4">
+            <!-- SEPET TABLOSU -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="mb-0">Sepet</h5>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-light table-borderless table-hover text-center mb-0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th class="text-start">Ürün Adı</th>
+                                    <th>Adet</th>
+                                    <th>Fiyat</th>
+                                    <th>Toplam</th>
+                                    <th>Sil</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    var i = 1;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr data-basketid="@item.BasketID" data-price="@item.Price">
+                                            <td class="align-middle">@i</td>
+                                            <td class="align-middle text-start">@item.ProductName</td>
+                                            <td class="align-middle">
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <button class="btn btn-sm btn-outline-secondary btn-minus">−</button>
+                                                    <input type="text" class="form-control form-control-sm text-center mx-1 basket-count" value="@item.Count" style="width:50px;" readonly />
+                                                    <button class="btn btn-sm btn-outline-secondary btn-plus">+</button>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">@($"{item.Price:N2}") ₺</td>
+                                            <!-- STATİK: Price × Count -->
+                                            <td class="align-middle basket-total">@((item.Price * item.Count).ToString("N2")) ₺</td>
+                                            <td class="align-middle">
+                                                <a href="/Baskets/DeleteBasket/@item.BasketID" class="btn btn-sm btn-danger btn-delete">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="py-5 text-muted">Sepetiniz boş.</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                            @if (Model != null && Model.Any())
+                            {
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-end fw-bold">Ara Toplam</td>
+                                        <td class="fw-bold">
+                                            <!-- STATİK: Sum(Price × Count) -->
+                                            <span id="totalprice">@($"{Model.Sum(x => x.Price * x.Count):N2}")</span> ₺
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SAĞ ÖZET KARTI -->
+            <div class="col-lg-4">
+                <div class="card shadow-lg border-0 rounded-3">
+                    <div class="card-header bg-warning text-dark text-uppercase text-center fw-bold">
+                        Sepet Özeti
+                    </div>
+                    <div class="card-body bg-light">
+                        <!-- Kupon -->
+                        <div class="input-group mb-3">
+                            <input type="text" id="couponcode" class="form-control p-3" placeholder="Kupon Kodunuz" />
+                            <button class="btn btn-warning fw-bold" id="btncouponcode">Kuponu Uygula</button>
+                        </div>
+
+                        <!-- Ara Toplam -->
+                        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                            <h6>Ara Toplam</h6>
+                            <h6><span id="totalprice2">@($"{Model?.Sum(x => x.Price * x.Count) ?? 0M:N2}")</span> ₺</h6>
+                        </div>
+
+                        <!-- KDV -->
+                        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                            <h6>KDV Oranı</h6>
+                            <h6><span id="kdvRate">20</span>%</h6>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                            <h6>KDV Tutarı</h6>
+                            <h6><span id="kdvAmount">0,00</span> ₺</h6>
+                        </div>
+
+                        <!-- Genel Toplam -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <h5>Genel Toplam</h5>
+                            <h5 class="fw-bold text-success"><span id="totalpricewithkdv">0,00</span> ₺</h5>
+                        </div>
+
+                        <div class="d-grid mt-3">
+                            <a href="/Order/Checkout" class="btn btn-dark btn-lg">Ödemeye Geç</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /SAĞ ÖZET KARTI -->
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("UILayoutFooterPartial")
+    @await Component.InvokeAsync("UILayoutScriptPartial")
+
+    <script>
+        (function () {
+            function parseMoney(text) {
+                return parseFloat(text.replace("₺", "").trim().replace(/\./g, "").replace(",", ".")) || 0;
+            }
+            function fmt(n) {
+                return n.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            // subtotalOverride verilirse onu kullanır; verilmezse satırlardan toplar
+            function recalc(subtotalOverride) {
+                var subtotal = (typeof subtotalOverride === "number")
+                    ? subtotalOverride
+                    : (function () {
+                        var s = 0;
+                        document.querySelectorAll(".basket-total").forEach(function (cell) {
+                            s += parseMoney(cell.textContent);
+                        });
+                        return s;
+                    })();
+
+                const el1 = document.getElementById("totalprice");
+                const el2 = document.getElementById("totalprice2");
+                if (el1) el1.textContent = fmt(subtotal);
+                if (el2) el2.textContent = fmt(subtotal);
+
+                var kdvRate = (parseFloat(document.getElementById("kdvRate").textContent) || 0) / 100.0;
+                var kdvAmount = subtotal * kdvRate;
+                var grand = subtotal + kdvAmount;
+
+                document.getElementById("kdvAmount").textContent = fmt(kdvAmount);
+                document.getElementById("totalpricewithkdv").textContent = fmt(grand);
+            }
+
+            // (+) ve (−) butonları
+            document.querySelectorAll(".btn-plus").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    var row = this.closest("tr");
+                    var input = row.querySelector(".basket-count");
+                    var count = parseInt(input.value) + 1;
+                    input.value = count;
+
+                    var price = parseFloat(row.dataset.price); // data-price ham sayı
+                    row.querySelector(".basket-total").textContent = fmt(price * count) + " ₺";
+
+                    // TODO: Backend güncellemesi (AJAX) burada yapılabilir.
+                    recalc();
+                });
+            });
+
+            document.querySelectorAll(".btn-minus").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    var row = this.closest("tr");
+                    var input = row.querySelector(".basket-count");
+                    var count = Math.max(1, parseInt(input.value) - 1);
+                    input.value = count;
+
+                    var price = parseFloat(row.dataset.price);
+                    row.querySelector(".basket-total").textContent = fmt(price * count) + " ₺";
+
+                    // TODO: Backend güncellemesi (AJAX)
+                    recalc();
+                });
+            });
+
+            // SİLME: satırı DOM'dan kaldır + recalc; sunucuya da istek at
+            document.querySelectorAll(".btn-delete").forEach(btn => {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const href = this.getAttribute("href");
+                    const row = this.closest("tr");
+
+                    // 1) Optimistic UI: ekrandan kaldır
+                    row.parentElement.removeChild(row);
+                    recalc();
+
+                    // 2) Sepet tamamen boşsa tfoot ve özetleri sıfırla
+                    const tbody = document.querySelector("table tbody");
+                    const hasAny = tbody.querySelectorAll("tr[data-basketid]").length > 0;
+                    if (!hasAny) {
+                        // tfoot'u kaldır
+                        const tf = document.querySelector("table tfoot");
+                        if (tf) tf.remove();
+
+                        // boş satırı ekle
+                        const empty = document.createElement("tr");
+                        empty.innerHTML = '<td colspan="6" class="py-5 text-muted">Sepetiniz boş.</td>';
+                        tbody.appendChild(empty);
+
+                        // sağ özet kartını sıfırla
+                        const zero = "0,00";
+                        const el1 = document.getElementById("totalprice");
+                        const el2 = document.getElementById("totalprice2");
+                        if (el1) el1.textContent = zero;
+                        if (el2) el2.textContent = zero;
+                        document.getElementById("kdvAmount").textContent = zero;
+                        document.getElementById("totalpricewithkdv").textContent = zero;
+                    }
+
+                    // 3) Sunucuya gerçek silme (GET aksiyonun varsa)
+                    fetch(href, { method: "GET", credentials: "same-origin" })
+                        .catch(() => { /* istersen burada uyarı göster */ });
+
+                    // Eğer POST bekliyorsa (önerilir), yukarıdaki yerine:
+                    // const id = row.dataset.basketid;
+                    // const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                    // fetch('/Baskets/DeleteBasket', {
+                    //   method: 'POST',
+                    //   headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token || '' },
+                    //   body: JSON.stringify({ id })
+                    // }).catch(() => {});
+                });
+            });
+
+            // Kupon kodu (örnek: %10 indirim) – recalc(discounted) ile override
+            document.getElementById("btncouponcode")?.addEventListener("click", function (e) {
+                e.preventDefault();
+                var code = document.getElementById("couponcode").value.trim();
+                if (!code) { alert("Lütfen kupon kodu giriniz."); return; }
+
+                var currentSubtotal = parseMoney(document.getElementById("totalprice").textContent);
+                var discounted = currentSubtotal * 0.90; // %10 ind.
+                recalc(discounted);
+            });
+
+            // İlk yüklemede KDV/Genel toplamları hesapla
+            recalc();
+        })();
+    </script>
+</body>
+</html>
