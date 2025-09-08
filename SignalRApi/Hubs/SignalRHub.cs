@@ -12,13 +12,15 @@ public class SignalRHub : Hub
     private readonly IMoneyCaseService _moneyCaseService;
     private readonly IMenuTableService _menuTableService;
     private readonly IBookingService _bookingService;
+    private readonly INotificationService _notificationService;
 
 
 
 
 
 
-    public SignalRHub(ICategoryService categoryService, IProductService productService, IOrderService orderService, IMoneyCaseService moneyCaseService, IMenuTableService menuTableService, IBookingService bookingService)
+
+    public SignalRHub(ICategoryService categoryService, IProductService productService, IOrderService orderService, IMoneyCaseService moneyCaseService, IMenuTableService menuTableService, IBookingService bookingService, INotificationService notificationService)
     {
         _categoryService = categoryService;
         _productService = productService;
@@ -26,6 +28,7 @@ public class SignalRHub : Hub
         _moneyCaseService = moneyCaseService;
         _menuTableService = menuTableService;
         _bookingService = bookingService;
+        _notificationService = notificationService;
     }
 
 
@@ -101,9 +104,23 @@ public class SignalRHub : Hub
     public async Task GetBookingList()
     {
         var values = _bookingService.TGetAll();
-        await Clients.All.SendAsync("ReceiveBookingList",values);
+        await Clients.All.SendAsync("ReceiveBookingList", values);
+
+    }
+
+    public async Task SendNotification()
+    {
+        var value = _notificationService.TNotificationCountByStatusFalse();
+        await Clients.All.SendAsync("ReceiveNotificationCountByFalse", value);
+
+        var notificationsbyfalse = _notificationService.TGetAllNotificationByFalse();
+        await Clients.All.SendAsync("ReceiveGetAllNotificationByFalse", notificationsbyfalse);
+
     
     }
+
+
+
 
 
 
