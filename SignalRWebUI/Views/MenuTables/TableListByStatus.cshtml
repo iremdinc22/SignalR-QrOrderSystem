@@ -1,0 +1,86 @@
+@model List<ResultMenuTableDto>
+
+@{
+    ViewData["Title"] = "TableListByStatus";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<!-- Kütüphaneler -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css"/>
+
+<!-- SignalR kütüphanesi -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.2/signalr.min.js"></script>
+
+<div class="content">
+  <div class="container-fluid">
+
+    <script type="text/javascript">
+      $(document).ready(() => {
+        var connection = new signalR.HubConnectionBuilder()
+          .withUrl("http://localhost:5247/signalrhub")
+          .build();
+
+        $("#connstatus").text(connection.state);
+
+        connection.start().then(() => {
+          $("#connstatus").text(connection.state);
+          setInterval(() => {
+            connection.invoke("GetMenuTableStatus");
+          }, 1000);
+        }).catch((err) => { console.log(err) });
+
+        // Backend’den gelen verileri al
+        connection.on("ReceiveGetMenuTableStatus", (value) => {
+          console.log(value);
+          var color = "";
+          var status = "";
+
+          let tablehtml = `<div class="row">`;
+          $.each(value, function (index, item) {
+            if(item.status== true){
+              color = "card card-stats card-success"
+              status = "Masa Dolu"
+            }
+            else{
+              color = "card card-stats card-danger"
+              status = "Masa Boş"
+            }
+            tablehtml += `
+              <div class="col-md-3 mb-4">
+                <div class="${color}">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-5">
+                        <div class="icon-big text-center">
+                          <i class="fas fa-table"></i>
+                        </div>
+                      </div>
+                      <div class="col-7 d-flex align-items-center">
+                        <div class="numbers text-center">
+                          <p class="card-category">${item.name}</p>
+                          <h4 class="card-title mb-0">${status}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+          });
+          tablehtml += `</div>`;
+
+          $("#statuslist").html(tablehtml);
+        });
+      });
+    </script>
+
+    <h4 class="page-title">Anlık Masa Durumları Sayfası</h4>
+
+    <div id="statuslist"><!-- JS burayı dolduracak --></div>
+
+  </div>
+</div>
