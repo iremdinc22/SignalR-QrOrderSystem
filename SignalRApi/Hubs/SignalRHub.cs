@@ -117,13 +117,17 @@ public class SignalRHub : Hub
         await Clients.All.SendAsync("ReceiveGetAllNotificationByFalse", notificationsbyfalse);
 
     }
-    
 
-     public async Task GetMenuTableStatus()
+    public async Task GetMenuTableStatus()
     {
         var value = _menuTableService.TGetAll();
         await Clients.All.SendAsync("ReceiveGetMenuTableStatus", value);
 
+    }
+    
+    public async Task SendMessage(string user , string message)
+    {
+        await Clients.All.SendAsync("ReceiveMessage", user , message);
     }
 
 
