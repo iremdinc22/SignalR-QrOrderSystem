@@ -1,0 +1,57 @@
+@{
+  Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+@await Component.InvokeAsync("UILayoutHeadPartial")
+
+<body class="sub_page">
+
+  @await Component.InvokeAsync("MenuNavbarPartial")
+
+  <!-- content -->
+  <section class="food_section layout_padding">
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col-12">
+          <h4 class="page-title">Anlık Client Sayısı: <strong id="clientCountValue"></strong></h4>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /content -->
+
+  <!-- footer -->
+  @await Component.InvokeAsync("UILayoutFooterPartial")
+  <!-- /footer -->
+
+  <!-- Scripts: jQuery/Bootstrap (layout partial), sonra SignalR, en sonda inline kod -->
+  @await Component.InvokeAsync("UILayoutScriptPartial")
+
+  <!-- SignalR kütüphanesi -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.2/signalr.min.js"></script>
+
+  <script>
+    // jQuery yüklendikten sonra çalışsın
+    $(function () {
+      // Hub connection
+      var connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5247/signalrhub") 
+        .build();
+
+      // Bağlantıyı başlat
+      connection.start().catch(err => console.log("SignalR connect error:", err));
+
+      // Client sayısını al
+      connection.on("ReceiveClientCount", function (count) {
+        $("#clientCountValue").text(count);
+      });
+
+      // (İstersen ilk yüklemede manuel tetik için server'a metod ekleyip çağırabilirsin)
+      // connection.start().then(() => connection.invoke("GetClientCount"));
+    });
+  </script>
+
+</body>
+</html>

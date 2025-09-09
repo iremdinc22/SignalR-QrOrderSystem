@@ -16,10 +16,6 @@ public class SignalRHub : Hub
 
 
 
-
-
-
-
     public SignalRHub(ICategoryService categoryService, IProductService productService, IOrderService orderService, IMoneyCaseService moneyCaseService, IMenuTableService menuTableService, IBookingService bookingService, INotificationService notificationService)
     {
         _categoryService = categoryService;
@@ -31,7 +27,7 @@ public class SignalRHub : Hub
         _notificationService = notificationService;
     }
 
-
+    public static int clientCount { get; set; } = 0;
 
     public async Task SendStatistics()
     {
@@ -124,10 +120,25 @@ public class SignalRHub : Hub
         await Clients.All.SendAsync("ReceiveGetMenuTableStatus", value);
 
     }
-    
-    public async Task SendMessage(string user , string message)
+
+    public async Task SendMessage(string user, string message)
     {
-        await Clients.All.SendAsync("ReceiveMessage", user , message);
+        await Clients.All.SendAsync("ReceiveMessage", user, message);
+    }
+
+    // Bu method clienta bağlı olan client sayısını getirir.
+    public override async Task OnConnectedAsync()
+    {
+        clientCount++;
+        await Clients.All.SendAsync("ReceiveClientCount", clientCount);
+        await base.OnConnectedAsync();
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        clientCount--;
+        await Clients.All.SendAsync("ReceiveClientCount", clientCount);
+        await base.OnDisconnectedAsync(exception);
     }
 
 
