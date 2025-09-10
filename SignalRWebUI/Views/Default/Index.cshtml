@@ -12,7 +12,9 @@
 
 @await Component.InvokeAsync("DefaultAboutPartial")
 
-@await Component.InvokeAsync("DefaultBookATablePartial")
+@* @await Component.InvokeAsync("DefaultBookATablePartial") *@
+
+@await Html.PartialAsync("SendMessage.cshtml")
 
 @await Component.InvokeAsync("DefaultTestimonialPartial")
 
