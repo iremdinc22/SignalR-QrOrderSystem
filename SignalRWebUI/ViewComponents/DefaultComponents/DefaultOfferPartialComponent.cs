@@ -12,21 +12,16 @@ namespace ViewComponents.DefaultComponents
         {
             _httpClientFactory = httpClientFactory;
         }
-        
+
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("http://localhost:5247/api/Discount");
-
-            List<ResultDiscountDto> values = new List<ResultDiscountDto>();
-
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                values = JsonConvert.DeserializeObject<List<ResultDiscountDto>>(jsonData);
-            }
-
-            return View(values);
+            var resp = await client.GetAsync("http://localhost:5247/api/Discount/GetActiveDiscounts");
+            var json = await resp.Content.ReadAsStringAsync();
+            var values = JsonConvert.DeserializeObject<List<ResultDiscountDto>>(json) ?? new List<ResultDiscountDto>();
+            return View(values); // Views/Shared/Components/DefaultOfferPartial/Default.cshtml
         }
+
+
     }
 }

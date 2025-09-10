@@ -30,11 +30,15 @@ namespace SignalRApi.Controllers
         public IActionResult CreateContact(CreateContactDto createContactDto)
         {
             _contactService.TAdd(new Contact
-                {
-                    Location = createContactDto.Location,
-                    Phone = createContactDto.Phone,
-                    Mail = createContactDto.Mail,
-                    FooterDescription = createContactDto.FooterDescription,
+            {
+                Location = createContactDto.Location,
+                Phone = createContactDto.Phone,
+                Mail = createContactDto.Mail,
+                FooterDescription = createContactDto.FooterDescription,
+                FooterTitle = createContactDto.FooterTitle,
+                OpenDays = createContactDto.OpenDays,
+                OpenDaysDescription = createContactDto.OpenDaysDescription,
+                OpenHours = createContactDto.OpenHours
                 });
             return Ok("İletişim Bilgisi Eklendi");
             
@@ -58,6 +62,10 @@ namespace SignalRApi.Controllers
                 Phone = updateContactDto.Phone,
                 Mail = updateContactDto.Mail,
                 FooterDescription = updateContactDto.FooterDescription,
+                FooterTitle = updateContactDto.FooterTitle,
+                OpenDays = updateContactDto.OpenDays,
+                OpenDaysDescription = updateContactDto.OpenDaysDescription,
+                OpenHours = updateContactDto.OpenHours
             });
             return Ok("İletişim Bilgisi Güncellendi");
             

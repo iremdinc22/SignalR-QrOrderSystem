@@ -6,7 +6,7 @@ namespace SignalR.BusinessLayer.Concrete;
 public class DiscountManager : IDiscountService
 {
     private readonly IDiscountDal _discountDal;
-    
+
     public DiscountManager(IDiscountDal discountDal)
     {
         _discountDal = discountDal;
@@ -35,4 +35,20 @@ public class DiscountManager : IDiscountService
     {
         return _discountDal.GetAll();
     }
+
+    public void TChangeStatusToTrue(int id)
+    {
+        _discountDal.ChangeStatusToTrue(id);
+    }
+
+    public void TChangeStatusToFalse(int id)
+    {
+        _discountDal.ChangeStatusToFalse(id);
+    }
+
+    public List<Discount> TGetActiveDiscounts()
+    {
+        return _discountDal.GetActiveDiscounts();
+    }
+    
 }
