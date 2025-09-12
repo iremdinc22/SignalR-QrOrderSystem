@@ -1,14 +1,31 @@
 using SignalR.EntityLayer.Entities;
 using SignalR.DataAccessLayer.Concrete;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;   // <-- eklendi
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Doğru sınıf adı: AuthorizationPolicyBuilder
+var requiredAuthorizePolicy = new AuthorizationPolicyBuilder()
+    .RequireAuthenticatedUser()
+    .Build();
 builder.Services.AddDbContext<SignalRContext>();
 builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<SignalRContext>();
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddControllersWithViews();
+// Tüm controller'lara yetkilendirme filtresi ekleniyor.
+builder.Services.AddControllersWithViews(opt =>
+{
+    opt.Filters.Add(new AuthorizeFilter(requiredAuthorizePolicy));
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login/Index"; // Giriş sayfası yolu
+});
 
 var app = builder.Build();
 
@@ -22,7 +39,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();          // wwwroot'tan dosya sunar
 
 app.UseRouting();
-
+app.UseAuthentication();      // Kimlik doğrulamayı etkinleştirir
 app.UseAuthorization();
 
 //app.MapControllerRoute(

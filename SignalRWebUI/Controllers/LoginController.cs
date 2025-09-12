@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SignalR.EntityLayer.Entities;
@@ -6,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SignalRWebUI.Controllers
 {
+
+    // Autorizasyon gerektirmeyen controllerda kullanılan ifade
+    [AllowAnonymous]
     public class LoginController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
@@ -31,7 +35,7 @@ namespace SignalRWebUI.Controllers
                 false,
                 false);
 
-           
+
             if (result.Succeeded)
             {
                 // Başarılı giriş → Anasayfaya yönlendir
