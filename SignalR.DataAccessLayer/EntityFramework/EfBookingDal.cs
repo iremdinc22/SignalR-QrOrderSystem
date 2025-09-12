@@ -28,4 +28,25 @@ public class EfBookingDal : GenericRepository<Booking>, IBookingDal
         values.Description = "Rezervasyon İptal Edildi";
         context.SaveChanges();
     }
+
+
+    public int GetActiveBookingCount()
+    {
+        using var context = new SignalRContext();
+        return context.Bookings.Count(b => b.Description == "Rezervasyon Onaylandı");
+    }
+
+    public int GetPassiveBookingCount()
+    {
+        using var context = new SignalRContext();
+        return context.Bookings.Count(b => b.Description == "Rezervasyon İptal Edildi");
+    }
+    
+    public int GetTotalBookingCount()
+    {
+        using var context = new SignalRContext();
+        return context.Bookings.Count();
+    }
+
+   
 }

@@ -6,7 +6,7 @@ namespace SignalR.BusinessLayer.Concrete;
 public class BookingManager : IBookingService
 {
     private readonly IBookingDal _bookingDal;
-    
+
     public BookingManager(IBookingDal bookingDal)
     {
         _bookingDal = bookingDal;
@@ -44,5 +44,20 @@ public class BookingManager : IBookingService
     public void TBookingStatusCancelled(int id)
     {
         _bookingDal.BookingStatusCancelled(id);
+    }
+
+    public int TGetActiveBookingCount()
+    {
+       return _bookingDal.GetActiveBookingCount();
+    }
+
+    public int TGetPassiveBookingCount()
+    {
+       return _bookingDal.GetPassiveBookingCount();
+    }
+
+    public int TGetTotalBookingCount()
+    {
+       return _bookingDal.GetTotalBookingCount();
     }
 }

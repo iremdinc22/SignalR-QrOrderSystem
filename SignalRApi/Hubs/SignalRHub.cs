@@ -25,6 +25,7 @@ public class SignalRHub : Hub
         _menuTableService = menuTableService;
         _bookingService = bookingService;
         _notificationService = notificationService;
+        _bookingService = bookingService;
     }
 
     public static int clientCount { get; set; } = 0;
@@ -92,6 +93,42 @@ public class SignalRHub : Hub
 
         var value3 = _menuTableService.TMenuTableCount();
         await Clients.All.SendAsync("ReceiveMenuTableCount", value3);
+
+        var value4 = _productService.TProductPriceAvg();
+        await Clients.All.SendAsync("ReceiveProductPriceAvg", value4);
+
+        var value5 = _productService.TProductCountByCategoryNameDrink();
+        await Clients.All.SendAsync("ReceiveProductCountByCategoryNameDrink", value5);
+
+        var value6 = _productService.TProductCountByCategoryNameHamburger();
+        await Clients.All.SendAsync("ReceiveProductCountByCategoryNameHamburger", value6);
+
+        var value7 = _notificationService.TNotificationCountByStatusFalse();
+        await Clients.All.SendAsync("ReceiveProductAvgPriceByHamburger", value7);
+
+        var value8 = _orderService.TTotalOrderCount();
+        await Clients.All.SendAsync("ReceiveTotalOrderCount", value8);
+
+        var value9 = _orderService.TLastOrderPrice();
+        await Clients.All.SendAsync("ReceiveLastOrderPrice", value9);
+
+        var value10 = _notificationService.TNotificationCountByStatusFalse();
+        await Clients.All.SendAsync("ReceiveNotificationCountByStatusFalse", value10);
+
+        var value11 = _categoryService.TCategoryCount();
+        await Clients.All.SendAsync("ReceiveCategoryCount", value11);
+
+        var value12 = _productService.TProductCount();
+        await Clients.All.SendAsync("ReceiveProductCount", value12);
+
+        var value13 = _bookingService.TGetActiveBookingCount();
+        await Clients.All.SendAsync("ReceiveGetActiveBookingCount", value13);
+
+        var value14 = _bookingService.TGetPassiveBookingCount();
+        await Clients.All.SendAsync("ReceiveGetPassiveBookingCount", value14);
+
+        var value15 = _bookingService.TGetTotalBookingCount();
+        await Clients.All.SendAsync("ReceiveGetTotalBookingCount", value15);
 
 
     }

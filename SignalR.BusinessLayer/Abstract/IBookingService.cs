@@ -7,6 +7,11 @@ namespace SignalR.BusinessLayer
     {
         void TBookingStatusApproved(int id);
         void TBookingStatusCancelled(int id);
-        
+
+        int TGetActiveBookingCount();
+        int TGetPassiveBookingCount();
+        int TGetTotalBookingCount();
+
+
     }
 }

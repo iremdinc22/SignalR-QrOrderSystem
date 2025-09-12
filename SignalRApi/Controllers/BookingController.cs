@@ -82,13 +82,36 @@ namespace SignalRApi.Controllers
             return Ok("Rezervasyon Açıklaması Değiştirildi.");
 
         }
-        
+
         [HttpGet("BookingStatusCancelled/{id}")]
         public IActionResult BookingStatusCancelled(int id)
         {
             _bookingService.TBookingStatusCancelled(id);
             return Ok("Rezervasyon Açıklaması Değiştirildi.");
 
+        }
+
+        [HttpGet("GetActiveBookingCount")]
+        public IActionResult GetActiveBookingCount()
+        {
+            var count = _bookingService.TGetActiveBookingCount();
+            return Ok(count);
+
+        }
+
+        [HttpGet("GetPassiveBookingCount")]
+        public IActionResult GetPassiveBookingCount()
+        {
+            var count = _bookingService.TGetPassiveBookingCount();
+            return Ok(count);
+
+        }
+
+        [HttpGet("GetTotalBookingCount")]
+        public IActionResult GetTotalBookingCount()
+        {
+            var count = _bookingService.TGetTotalBookingCount();
+            return Ok(count);       
         }
         
         
