@@ -1,0 +1,46 @@
+@model CreateMailDto
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Mail Sayfası</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="Index" method="post">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Mail Gönderme Paneli</div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="ReceiverMail">Alıcı Mail Adresi</label>
+                                <input asp-for="ReceiverMail" type="email" class="form-control" id="ReceiverMail" />
+                                <span asp-validation-for="ReceiverMail" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Subject">Konu</label>
+                                <input asp-for="Subject" type="text" class="form-control" id="Subject" />
+                                <span asp-validation-for="Subject" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Body">Mesajınız</label>
+                                <textarea asp-for="Body" class="form-control" id="Body" rows="5"></textarea>
+                                <span asp-validation-for="Body" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-primary">Maili Gönder</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
