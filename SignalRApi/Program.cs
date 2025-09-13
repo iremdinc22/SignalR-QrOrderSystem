@@ -7,6 +7,7 @@ using SignalR.DataAccessLayer.Concrete;
 using SignalR.DataAccessLayer.EntityFramework;
 using SignalRApi.Hubs;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
@@ -29,9 +30,8 @@ builder.Services.AddDbContext<SignalRContext>(options =>
 
 // DbContext
 builder.Services.AddDbContext<SignalRContext>();
-// AutoMapper
+// 🔹 AutoMapper
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
 // DI registrations
 builder.Services.AddScoped<IAboutService, AboutManager>();
 builder.Services.AddScoped<IAboutDal, EfAboutDal>();

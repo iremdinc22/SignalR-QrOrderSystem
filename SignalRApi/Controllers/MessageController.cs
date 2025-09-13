@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SignalR.BusinessLayer;
 using SignalR.DtoLayer.MessageDto;
@@ -10,16 +11,18 @@ namespace SignalRApi.Controllers
     public class MessageController : ControllerBase
     {
         private readonly IMessageService _messageService;
+        private readonly IMapper _mapper;
 
-        public MessageController(IMessageService messageService)
+        public MessageController(IMessageService messageService, IMapper mapper)
         {
             _messageService = messageService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult MessageList()
         {
-            var values = _messageService.TGetAll();
+            var values =_mapper.Map<List<ResultMessageDto>>(_messageService.TGetAll());
             return Ok(values);
 
         }
@@ -27,17 +30,7 @@ namespace SignalRApi.Controllers
         [HttpPost]
         public IActionResult CreateMessage(CreateMessageDto createMessageDto)
         {
-            Message message = new Message()
-            {
-                NameSurname = createMessageDto.NameSurname,
-                Mail = createMessageDto.Mail,
-                Phone = createMessageDto.Phone,
-                Subject = createMessageDto.Subject,
-                MessageContent = createMessageDto.MessageContent,
-                MessageSendDate = createMessageDto.MessageSendDate,
-                Status = false
-            };
-            _messageService.TAdd(message);
+            _messageService.TAdd(_mapper.Map<Message>(createMessageDto));
             return Ok("Mesaj Başarılı Bir Şekilde Gönderildi.");
         }
 
@@ -53,18 +46,8 @@ namespace SignalRApi.Controllers
         [HttpPut]
         public IActionResult UpdateAbout(UpdateMessageDto updateMessageDto)
         {
-            Message message = new Message()
-            {
-                MessageID = updateMessageDto.MessageID,
-                NameSurname = updateMessageDto.NameSurname,
-                Mail = updateMessageDto.Mail,
-                Phone = updateMessageDto.Phone,
-                Subject = updateMessageDto.Subject,
-                MessageContent = updateMessageDto.MessageContent,
-                MessageSendDate = updateMessageDto.MessageSendDate,
-                Status = false
-            };
-            _messageService.TUpdate(message);
+            var value = _mapper.Map<Message>(updateMessageDto);
+            _messageService.TUpdate(value);
             return Ok("Mesajlar Kısmı Başarılı Bir Şekilde Güncelendi.");
         }
 
@@ -72,7 +55,7 @@ namespace SignalRApi.Controllers
         public IActionResult GetMessage(int id)
         {
             var value = _messageService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetMessageDto>(value));
             
         }
 

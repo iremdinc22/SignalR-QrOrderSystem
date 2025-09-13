@@ -29,14 +29,7 @@ namespace SignalRApi.Controllers
         [HttpPost]
         public IActionResult CreateTestimonial(CreateTestimonialDto createTestimonialDto)
         {
-            _testimonialService.TAdd(new Testimonial
-            {
-                Name = createTestimonialDto.Name,
-                Title = createTestimonialDto.Title,
-                Comment = createTestimonialDto.Comment,
-                Image = createTestimonialDto.Image,
-                Status = createTestimonialDto.Status,
-            });
+            _testimonialService.TAdd(_mapper.Map<Testimonial>(createTestimonialDto));
             return Ok("Müşteri Yorum Bilgisi Eklendi");
         }
         
@@ -51,16 +44,7 @@ namespace SignalRApi.Controllers
         [HttpPut]
         public IActionResult UpdateTestimonial(UpdateTestimonialDto updateTestimonialDto)
         {
-            _testimonialService.TUpdate(new Testimonial
-            { 
-                TestimonialID = updateTestimonialDto.TestimonialID,
-                Name = updateTestimonialDto.Name,
-                Title = updateTestimonialDto.Title,
-                Comment = updateTestimonialDto.Comment,
-                Image = updateTestimonialDto.Image,
-                Status = updateTestimonialDto.Status,
-               
-            });
+            _testimonialService.TUpdate(_mapper.Map<Testimonial>(updateTestimonialDto));
             return Ok("Müşteri Yorum Bilgisi Güncellendi");
             
         }
@@ -69,7 +53,7 @@ namespace SignalRApi.Controllers
         public IActionResult GetTestimonial(int id)
         {
             var value = _testimonialService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetTestimonialDto>(value));
         }
         
         

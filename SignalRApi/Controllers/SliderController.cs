@@ -29,15 +29,7 @@ namespace SignalRApi.Controllers
         [HttpPost]
         public IActionResult CreateSlider(CreateSliderDto createSliderDto)
         {
-            _sliderService.TAdd(new Slider
-            {
-                Title1 = createSliderDto.Title1,
-                Title2 = createSliderDto.Title2,
-                Title3 = createSliderDto.Title3,
-                Description1 = createSliderDto.Description1,
-                Description2 = createSliderDto.Description2,
-                Description3 = createSliderDto.Description3,
-            });
+            _sliderService.TAdd(_mapper.Map<Slider>(createSliderDto));
             return Ok("Slider Eklendi");
         }
 
@@ -52,16 +44,7 @@ namespace SignalRApi.Controllers
         [HttpPut]
         public IActionResult UpdateSlider(UpdateSliderDto updateSliderDto)
         {
-            _sliderService.TUpdate(new Slider
-            {
-                SliderID = updateSliderDto.SliderID,
-                Title1 = updateSliderDto.Title1,
-                Title2 = updateSliderDto.Title2,
-                Title3 = updateSliderDto.Title3,
-                Description1 = updateSliderDto.Description1,
-                Description2 = updateSliderDto.Description2,
-                Description3 = updateSliderDto.Description3,
-            });
+            _sliderService.TUpdate(_mapper.Map<Slider>(updateSliderDto));
             return Ok("Slider Güncellendi");
         }
 
@@ -69,7 +52,7 @@ namespace SignalRApi.Controllers
         public IActionResult GetSlider(int id)
         {
             var value = _sliderService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<ResultSliderDto>(value));
         }
     }
 }
