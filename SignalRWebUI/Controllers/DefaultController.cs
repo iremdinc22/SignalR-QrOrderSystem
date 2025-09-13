@@ -1,10 +1,13 @@
 using System.Net.Http;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SignalRWebUI.Dtos.ContactDtos;
 using SignalRWebUI.Dtos.MessageDtos;
 namespace SignalRWebUI.Controllers
 {
+    [AllowAnonymous]
     public class DefaultController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -13,13 +16,14 @@ namespace SignalRWebUI.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
+            
         }
 
         [HttpGet]
-        public PartialViewResult SendMessage()
+        public async Task<PartialViewResult> SendMessage()
         {
             return PartialView();
         }

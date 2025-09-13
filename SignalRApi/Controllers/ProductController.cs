@@ -58,7 +58,7 @@ namespace SignalRApi.Controllers
             return Ok(values);
         }
 
-        [HttpGet("ProductCountByHamburger")]    
+        [HttpGet("ProductCountByHamburger")]
         public IActionResult ProductCountByCategoryNameHamburger()
         {
             var values = _productService.TProductCountByCategoryNameHamburger();
@@ -132,6 +132,14 @@ namespace SignalRApi.Controllers
         {
             var value = _productService.TGetById(id);
             return Ok(_mapper.Map<ResultProductDto>(value));
+        }
+
+
+        [HttpGet("GetLast9Products")]
+        public IActionResult GetLast9Products()
+        {
+            var values = _productService.TGetLast9Products();
+            return Ok(values);
         }
     }
 }

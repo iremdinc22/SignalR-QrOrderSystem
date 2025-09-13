@@ -22,7 +22,7 @@ namespace SignalRApi.Controllers
         [HttpGet]
         public IActionResult MessageList()
         {
-            var values =_mapper.Map<List<ResultMessageDto>>(_messageService.TGetAll());
+            var values = _mapper.Map<List<ResultMessageDto>>(_messageService.TGetAll());
             return Ok(values);
 
         }
@@ -30,7 +30,15 @@ namespace SignalRApi.Controllers
         [HttpPost]
         public IActionResult CreateMessage(CreateMessageDto createMessageDto)
         {
-            _messageService.TAdd(_mapper.Map<Message>(createMessageDto));
+            var entity = _mapper.Map<Message>(createMessageDto);
+
+            // kritik satır: tarihi biz veriyoruz
+            entity.MessageSendDate = DateTime.UtcNow; // veya DateTime.Now (lokale göre)
+
+            // istersen varsayılan durum da ver:
+            if (entity.Status == default) entity.Status = false;
+
+            _messageService.TAdd(entity);
             return Ok("Mesaj Başarılı Bir Şekilde Gönderildi.");
         }
 
@@ -40,7 +48,7 @@ namespace SignalRApi.Controllers
             var value = _messageService.TGetById(id);
             _messageService.TDelete(value);
             return Ok("Mesaj Silindi.");
-            
+
         }
 
         [HttpPut]
@@ -56,7 +64,7 @@ namespace SignalRApi.Controllers
         {
             var value = _messageService.TGetById(id);
             return Ok(_mapper.Map<GetMessageDto>(value));
-            
+
         }
 
 

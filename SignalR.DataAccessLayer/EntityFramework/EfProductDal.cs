@@ -56,11 +56,18 @@ public class EfProductDal : GenericRepository<Product>, IProductDal
         using var context = new SignalRContext();
         return context.Products.Where(p => p.Price == context.Products.Min(x => x.Price)).Select(y => y.ProductName).FirstOrDefault() ?? "";
     }
-    
+
     public decimal ProductAvgPriceByHamburger()
     {
         using var context = new SignalRContext();
         return context.Products.Where(p => p.CategoryID == (context.Categories.Where(y => y.CategoryName == "Hamburger").Select(z => z.CategoryID).FirstOrDefault())).Average(p => p.Price);
+    }
+    
+
+    public List<Product> GetLast9Products()
+    {
+        using var context = new SignalRContext();
+        return context.Products.OrderByDescending(p => p.ProductID).Take(9).ToList();
     }
 
 }

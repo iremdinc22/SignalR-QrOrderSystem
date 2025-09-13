@@ -1,10 +1,13 @@
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.BasketDtos;
 using SignalRWebUI.Dtos.ProductDtos;
 namespace SignalRWebUI.Controllers
 {
+
+    [AllowAnonymous]
     public class MenuController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -17,7 +20,7 @@ namespace SignalRWebUI.Controllers
         public async Task<IActionResult> Index()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("http://localhost:5247/api/Product");
+            var responseMessage = await client.GetAsync("http://localhost:5247/api/Product/ProductListWithCategory");
 
             List<ResultProductDto> values = new List<ResultProductDto>();
 

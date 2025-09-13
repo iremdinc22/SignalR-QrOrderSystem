@@ -16,7 +16,7 @@ namespace ViewComponents.DefaultComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("http://localhost:5247/api/Product");
+            var responseMessage = await client.GetAsync("http://localhost:5247/api/Product/GetLast9Products");
 
             List<ResultProductDto> values = new List<ResultProductDto>();
 

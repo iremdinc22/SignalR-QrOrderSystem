@@ -29,6 +29,17 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
+// 404 Hataları için özel yönlendirme
+app.UseStatusCodePages(async context =>
+{
+    var response = context.HttpContext.Response;
+
+    if (response.StatusCode == 404)
+    {
+        response.Redirect("/Error/NotFound404Page");
+    }
+}); 
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
