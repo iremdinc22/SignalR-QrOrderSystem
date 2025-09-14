@@ -1,0 +1,83 @@
+@model List<ResultTastyApiDto>
+
+@{
+    ViewData["Title"] = "Tasty Api Listesi";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+@await Component.InvokeAsync("UILayoutHeadPartial")
+
+<body class="sub_page">
+    @await Component.InvokeAsync("MenuNavbarPartial")
+
+    <div class="container-fluid mt-4">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-dark mb-30">
+                    <a class="breadcrumb-item text-white" href="/Default/Index">Ana Sayfa</a>
+                    <a class="breadcrumb-item text-white" href="/Menu/Index">Api Listesi</a>
+                    <span class="breadcrumb-item active text-white">Tasty Api Tarifleri</span>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row px-xl-5 g-4">
+            <!-- Tasty API Tablosu -->
+            <div class="col-lg-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="mb-0">Tasty API Ürünleri</h5>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-light table-borderless table-hover text-center mb-0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Resim</th>
+                                    <th class="text-start">Ürün Adı</th>
+                                    <th>Tahmini Süre (dk)</th>
+                                    <th>Tarifi İzle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="@item.thumbnail_url" style="width:50px; height:50px;"
+                                                alt="@item.Name" />
+                                        </td>
+                                        <td class="text-start">@item.Name</td>
+                                        <td>
+                                            @(item.total_time_minutes == 0 ? 15 : item.total_time_minutes)
+                                        </td>
+
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.original_video_url))
+                                            {
+                                                <a href="@item.original_video_url" target="_blank" class="btn btn-sm btn-warning">İzle</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-warning">-</span>
+                                            }
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("UILayoutFooterPartial")
+    @await Component.InvokeAsync("UILayoutScriptPartial")
+
+</body>
+
+</html>
