@@ -17,38 +17,48 @@ namespace SignalRWebUI.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+
+        public async Task<IActionResult> Index(int id)
         {
+            ViewBag.v = id; // Burada MenuTableId değerini ayarlıyoruz
+           // TempData["x"] = id; // Eğer bunu kullanıyorsanız
+
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("http://localhost:5247/api/Product/ProductListWithCategory");
-
-            List<ResultProductDto> values = new List<ResultProductDto>();
-
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                values = JsonConvert.DeserializeObject<List<ResultProductDto>>(jsonData);
-            }
-
+            var jsonData = await responseMessage.Content.ReadAsStringAsync();
+            var values = JsonConvert.DeserializeObject<List<ResultProductDto>>(jsonData);
             return View(values);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> AddBasket(int id)
+        public async Task<IActionResult> AddBasket(int id, int menuTableId)
         {
-            CreateBasketDto createBasketDto = new CreateBasketDto();
-            createBasketDto.ProductID = id;
+            if (menuTableId == 0)
+            {
+                return BadRequest("MenuTableId 0 geliyor.");
+            }
+
+            CreateBasketDto createBasketDto = new CreateBasketDto
+            {
+                ProductID = id,
+                MenuTableID = menuTableId // Gelen MenuTableID burada kullanılıyor
+            };
+
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createBasketDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("http://localhost:5247/api/Basket/", stringContent);
+            var responseMessage = await client.PostAsync("http://localhost:5247/api/Basket", stringContent);
+
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
+
             return Json(createBasketDto);
         }
+
     }
 
 
