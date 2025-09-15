@@ -36,9 +36,14 @@ public class MenuTableManager : IMenuTableService
     {
         _menuTableDal.Update(entity);
     }
-    
+
     public int TMenuTableCount()
     {
         return _menuTableDal.MenuTableCount();
+    }
+    
+    public void TChangeMenuTableStatus(int id, bool status)
+    {
+        _menuTableDal.ChangeMenuTableStatus(id, status);
     }
 }

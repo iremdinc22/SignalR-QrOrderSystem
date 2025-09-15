@@ -31,7 +31,7 @@ namespace SignalRApi.Controllers
         [HttpPost]
         public IActionResult CreateMenuTable(CreateMenuTableDto createMenuTableDto)
         {
-           _menuTableService.TAdd(_mapper.Map<MenuTable>(createMenuTableDto));
+            _menuTableService.TAdd(_mapper.Map<MenuTable>(createMenuTableDto));
             return Ok("Masa başarılı bir şekilde eklendi.");
         }
 
@@ -69,8 +69,14 @@ namespace SignalRApi.Controllers
             return Ok(count);
 
         }
-    
-        
+
+        [HttpPut("ChangeMenuTableStatus/{id}")]
+        public IActionResult ChangeMenuTableStatus(int id, [FromQuery] bool status)
+        {
+            _menuTableService.TChangeMenuTableStatus(id, status);
+            return Ok("Masa durumu güncellendi.");
+
+        }
     }
 }
       

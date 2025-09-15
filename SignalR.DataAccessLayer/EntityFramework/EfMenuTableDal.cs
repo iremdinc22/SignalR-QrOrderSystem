@@ -11,10 +11,23 @@ public class EfMenuTableDal : GenericRepository<MenuTable>, IMenuTableDal
     {
 
     }
-    
+
+    public void ChangeMenuTableStatus(int id, bool status)
+    {
+        using var context = new SignalRContext();
+        var menuTable = context.MenuTables.Find(id);
+        if (menuTable != null)
+        {
+            menuTable.Status = status;
+            context.SaveChanges();
+        }
+    }
+
     public int MenuTableCount()
     {
         using var context = new SignalRContext();
         return context.MenuTables.Count();
     }
+    
+    
 }
