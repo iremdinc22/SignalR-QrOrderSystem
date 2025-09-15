@@ -1,0 +1,107 @@
+@model List<ResultMenuTableDto>
+@{
+    ViewData["Title"] = "Masa Seçimi Listesi";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+@await Component.InvokeAsync("UILayoutHeadPartial")
+
+<body class="sub_page">
+    @await Component.InvokeAsync("MenuNavbarPartial")
+
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            @foreach(var item in Model)
+            {
+                var bgClass = item.Status ? "occupied" : "available";  
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="widget @bgClass">
+
+                        @if(item.Status == true)
+                        {
+                            <div class="widget-icon">
+                                <i class="fas fa-chair"></i> <!-- Masa ikonu -->
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="widget-icon">
+                                <a href="/Menu/Index/@item.MenuTableID">
+                                    <i class="fas fa-chair"></i> <!-- Masa ikonu -->
+                                </a>
+                            </div>
+                        }
+
+                        <div class="widget-text">
+                            <h3>@item.Name</h3>
+                            <p>@(item.Status ? "Dolu" : "Boş")</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("UILayoutFooterPartial")
+    @await Component.InvokeAsync("UILayoutScriptPartial")
+
+</body>
+
+<!-- === Widget Kodu (değiştirmeden entegre) === -->
+<style>
+    .widget {
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        color: white;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin: 5px 0;
+        padding: 10px;
+    }
+    .widget-icon {
+        width: 40px;
+        height: 40px;
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 10px;
+    }
+    .widget-icon i {
+        font-size: 24px;
+    }
+    .widget-text { margin-left: 20px; }
+    .widget-text h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+    .widget-text p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    /* Dinamik renkler */
+    .available {
+        background-color: #2ecc71; /* yeşil */
+    }
+    .available .widget-icon i {
+        color: #2ecc71;
+    }
+
+    .occupied {
+        background-color: #e74c3c; /* kırmızı */
+    }
+    .occupied .widget-icon i {
+        color: #e74c3c;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- === /Widget Kodu === -->
+
+</html>
