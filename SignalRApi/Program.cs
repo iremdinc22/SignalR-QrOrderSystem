@@ -1,10 +1,14 @@
 using System.Reflection;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore; //  UseNpgsql için gerekli
 using SignalR.BusinessLayer;
 using SignalR.BusinessLayer.Concrete;
+using SignalR.BusinessLayer.ValidationRules.BookingValidations;
 using SignalR.DataAccessLayer.Abstract;
 using SignalR.DataAccessLayer.Concrete;
 using SignalR.DataAccessLayer.EntityFramework;
+using SignalR.DtoLayer.BookingDto;
 using SignalRApi.Hubs;
 
 
@@ -84,7 +88,8 @@ builder.Services.AddScoped<INotificationDal, EfNotificationDal>();
 builder.Services.AddScoped<IMessageService, MessageManager>();
 builder.Services.AddScoped<IMessageDal, EfMessageDal>();
 
-
+// Fluent Validation ı ekleyen kısım
+builder.Services.AddValidatorsFromAssemblyContaining<CreateBookingValidation>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(opt =>
